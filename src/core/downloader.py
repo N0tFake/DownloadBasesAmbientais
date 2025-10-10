@@ -3,6 +3,8 @@ import certifi
 import mimetypes
 from urllib.request import urlretrieve, urlopen
 from pathlib import Path
+from tqdm import tqdm
+import requests
 
 
 #! WARNING
@@ -25,7 +27,7 @@ file_name = "teste.zip"
 
 # def get_mine_type(file_name):
 #     mimetype = mimetypes.guess_extension(file_name)
-#     return mimetype
+#     return mimetype4
 
 
 # with urlopen(url) as response:
@@ -43,15 +45,33 @@ class Downloader:
     def download(self, url, file_name, file_path):
         output = Path(file_path).joinpath(file_name)
         try:
-            # print(f"Downloading {file_name} from {url}...")
-            path, header = urlretrieve(url, output)
+            response = requests.get(url, stream=True, verify=False)
+            response.raise_for_status()
+            
+            total_size = int(response.headers.get('content-length', 0))
+            
+            progress_bar = tqdm(
+                total=total_size,
+                unit='B',
+                unit_scale=True,
+                desc=f"Baixando {file_name}",
+                leave=True
+            )
+            
+            with open(output, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+                        progress_bar.update(len(chunk))
+            
+            progress_bar.close()
+            
             return {
                 'success': True,
-                'path': path, 
-                'header': header
+                'path': str(output),
+                'header': dict(response.headers)
             }
         except Exception as e:
-            # print(f"Error downloading {file_name}: {e}")
             return {
                 'success': False,
                 'error': str(e)
