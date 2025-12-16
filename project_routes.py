@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 PROJECT_PATH = Path(__file__).parent.absolute()
-DOWNLOADS_ROOT = Path(r'C:\Users\silvio.chaves\Desktop\MAIN\Atualizações de Bases\Embargos')
+DOWNLOADS_ROOT = Path(r'C:\Users\silvio.chaves\Desktop\MAIN\40_Data_Hub\Atualizações de Bases')
 
 class Routes:
   
@@ -21,8 +21,8 @@ class Routes:
         1: 'Jan', 2: 'Fev', 3: 'Mar', 4: 'Abr', 5: 'Mai', 6: 'Jun',
         7: 'Jul', 8: 'Ago', 9: 'Set', 10: 'Out', 11: 'Nov', 12: 'Dez'
     }
-
-    base_path = DOWNLOADS_ROOT.joinpath(embargo_name)
+    embargos_path = DOWNLOADS_ROOT.joinpath('Embargos')
+    base_path = embargos_path.joinpath(embargo_name)
     current_date = datetime.now() + timedelta(days=day_offset)
 
     day = current_date.strftime("%d")
