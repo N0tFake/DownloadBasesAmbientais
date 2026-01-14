@@ -4,8 +4,8 @@ Script para testar o novo caminho de download.
 
 import asyncio
 from pathlib import Path
-from embargo_processor import EmbargoProcessor
-from src.config.bases_infos import EMBARGOS_DATA_SOURCES, Orgao
+from src.processors.embargo_processor import EmbargoProcessor
+from src.config.bases_infos import DATA_SOURCES_EMBARGOS, Orgao
 import project_routes
 
 
@@ -21,7 +21,7 @@ def test_paths():
     
     print(f"\n📋 Caminhos para cada órgão:")
     
-    for orgao, source in EMBARGOS_DATA_SOURCES.items():
+    for orgao, source in DATA_SOURCES_EMBARGOS.items():
         output_path = routes.get_output_path(source.name)
         
         print(f"   {source.name:<12} | {output_path}")
@@ -53,16 +53,16 @@ async def test_single_download():
     try:
         processor = EmbargoProcessor()
         
-        ibama_source = EMBARGOS_DATA_SOURCES[Orgao.IBAMA]
+        ibama_source = DATA_SOURCES_EMBARGOS[Orgao.IBAMA]
         
         print(f"📥 Testando download do {ibama_source.name}...")
         
         output_path = processor.routes.get_output_path(ibama_source.name)
         print(f"📁 Arquivo será salvo em: {output_path}")
         
-        original_sources = EMBARGOS_DATA_SOURCES.copy()
-        EMBARGOS_DATA_SOURCES.clear()
-        EMBARGOS_DATA_SOURCES[Orgao.IBAMA] = original_sources[Orgao.IBAMA]
+        original_sources = DATA_SOURCES_EMBARGOS.copy()
+        DATA_SOURCES_EMBARGOS.clear()
+        DATA_SOURCES_EMBARGOS[Orgao.IBAMA] = original_sources[Orgao.IBAMA]
         
         try:
             results = await processor.download_all_embargos()
@@ -79,8 +79,8 @@ async def test_single_download():
                 print("❌ Falha no download de teste")
                 
         finally:
-            EMBARGOS_DATA_SOURCES.clear()
-            EMBARGOS_DATA_SOURCES.update(original_sources)
+            DATA_SOURCES_EMBARGOS.clear()
+            DATA_SOURCES_EMBARGOS.update(original_sources)
             
     except Exception as e:
         print(f"❌ Erro no teste: {str(e)}")

@@ -1,6 +1,5 @@
 import asyncio
-from embargo_processor import EmbargoProcessor
-
+from src.processors.Embargos import EmbargoProcessor
 
 async def main():
     print("🌍 Sistema de Download de Bases de Embargos Ambientais")

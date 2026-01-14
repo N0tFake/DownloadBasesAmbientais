@@ -1,5 +1,5 @@
 import asyncio
-from embargo_processor import EmbargoProcessor
+from src.processors.embargo_processor import EmbargoProcessor
 
 
 async def test_system():

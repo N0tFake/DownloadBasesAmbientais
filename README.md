@@ -95,7 +95,7 @@ class Orgao(Enum):
     NOVO_ORGAO = "NOVO_ORGAO"
 
 # Adicionar configuração
-EMBARGOS_DATA_SOURCES[Orgao.NOVO_ORGAO] = DataSourceInfo(
+DATA_SOURCES_EMBARGOS[Orgao.NOVO_ORGAO] = DataSourceInfo(
     name="NOVO_ORGAO",
     datasets=[
         DatasetsInfo(

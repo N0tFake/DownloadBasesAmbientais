@@ -8,6 +8,9 @@ class Orgao(Enum):
     SIGA_MT = "SIGA_MT"
     SIMGEO = "SIMGEO"
     LDI = "LDI"
+    DETER_AMZ = 'DETER_AMZ'
+    DETER_CRRD = 'DETER_CRRD'
+    DETER_PANTANAL = 'DETER_PANTANAL'
 
 @dataclass(frozen=True)
 class DataSourceInfo:
@@ -20,9 +23,49 @@ class DatasetsInfo:
     urls: list
     file_name: str
 
+DATA_SOURCES_DETER = {
+  Orgao.DETER_AMZ: DataSourceInfo(
+    name="DETER_AMZ",
+    datasets=[
+      DatasetsInfo(
+        slug="Deter Bioma Amazônia",
+        urls=[
+          "https://terrabrasilis.dpi.inpe.br/file-delivery/download/deter-amz/shape"
+        ],
+        file_name="SITE_Deter_AMZ.zip"
+      )
+    ]
+  ),
+  
+  Orgao.DETER_CRRD: DataSourceInfo(
+    name="DETER_CRRD",
+    datasets=[
+      DatasetsInfo(
+        slug="Deter Bioma Cerrado",
+        urls=[
+          "https://terrabrasilis.dpi.inpe.br/file-delivery/download/deter-cerrado-nb/shape"
+        ],
+        file_name="SITE_Deter_CRRD.zip"
+      )
+    ]
+  ),
+  
+  Orgao.DETER_PANTANAL: DataSourceInfo(
+    name="DETER_PANTANAL",
+    datasets=[
+      DatasetsInfo(
+        slug="Deter Bioma Pantanal",
+        urls=[
+          "https://terrabrasilis.dpi.inpe.br/file-delivery/download/deter-pantanal/shape"
+        ],
+        file_name="SITE_Deter_Pantanal.zip"
+      )
+    ]
+  )
+}  
     
 
-EMBARGOS_DATA_SOURCES = {
+DATA_SOURCES_EMBARGOS = {
   
   Orgao.IBAMA: DataSourceInfo(
     name="IBAMA",

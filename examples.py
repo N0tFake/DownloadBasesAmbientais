@@ -5,7 +5,7 @@ Este arquivo mostra diferentes formas de usar o EmbargoProcessor.
 """
 
 import asyncio
-from embargo_processor import EmbargoProcessor
+from src.processors.Embargos import EmbargoProcessor
 
 
 async def example_validate_links_only():
@@ -22,23 +22,23 @@ async def example_validate_links_only():
 
 
 async def example_download_specific_orgao():
-    from src.config.bases_infos import EMBARGOS_DATA_SOURCES, Orgao
+    from src.config.bases_infos import DATA_SOURCES_EMBARGOS, Orgao
     
     print("📥 Fazendo download apenas do IBAMA...")
     
     processor = EmbargoProcessor()
     
-    original_sources = EMBARGOS_DATA_SOURCES.copy()
-    EMBARGOS_DATA_SOURCES.clear()
-    EMBARGOS_DATA_SOURCES[Orgao.IBAMA] = original_sources[Orgao.IBAMA]
+    original_sources = DATA_SOURCES_EMBARGOS.copy()
+    DATA_SOURCES_EMBARGOS.clear()
+    DATA_SOURCES_EMBARGOS[Orgao.IBAMA] = original_sources[Orgao.IBAMA]
     
     try:
         results = await processor.download_all_embargos()
         report = processor.generate_report()
         processor.print_report(report)
     finally:
-        EMBARGOS_DATA_SOURCES.clear()
-        EMBARGOS_DATA_SOURCES.update(original_sources)
+        DATA_SOURCES_EMBARGOS.clear()
+        DATA_SOURCES_EMBARGOS.update(original_sources)
 
 
 async def example_check_database():

@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from src.config.bases_infos import EMBARGOS_DATA_SOURCES, Orgao
+from src.config.bases_infos import DATA_SOURCES_EMBARGOS, Orgao
 from src.utils.check_link import CheckLink
 from src.config.logger_config import LoggerConfig
 from src.core.downloader import Downloader
@@ -78,7 +78,7 @@ class EmbargoProcessor:
         self.logger.info("Iniciando validação de links...")
         results = {}
         
-        for orgao, source in EMBARGOS_DATA_SOURCES.items():
+        for orgao, source in DATA_SOURCES_EMBARGOS.items():
             for dataset in source.datasets:
                 self.logger.info(f"Validando links para: {dataset.slug}")
                 
@@ -109,11 +109,11 @@ class EmbargoProcessor:
             Dict com resultados dos downloads
         """
         self.logger.info("Iniciando processo de download de embargos...")
-        self.logger.info(f"Total de fontes de dados: {len(EMBARGOS_DATA_SOURCES)}")
+        self.logger.info(f"Total de fontes de dados: {len(DATA_SOURCES_EMBARGOS)}")
         
         download_results = {}
         
-        for orgao, source in EMBARGOS_DATA_SOURCES.items():
+        for orgao, source in DATA_SOURCES_EMBARGOS.items():
             orgao_results = []
             output_path = self.routes.get_output_path(source.name)
             
