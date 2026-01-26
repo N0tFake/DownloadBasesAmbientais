@@ -63,10 +63,8 @@ DATA_SOURCES_DETER = {
     ]
   )
 }  
-    
 
 DATA_SOURCES_EMBARGOS = {
-  
   Orgao.IBAMA: DataSourceInfo(
     name="IBAMA",
     datasets=[

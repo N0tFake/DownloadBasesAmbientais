@@ -18,7 +18,7 @@ class Processor:
         
         # Configurações
         #! ADAPTAR routes
-        self.routes = project_routes.Routes()
+        self.routes = project_routes.Routes(process_name)
         self.logger_config = LoggerConfig()
         self.logger = self.logger_config.get_logger()
         # self.templates = Templates()
@@ -38,27 +38,27 @@ class Processor:
     def _init_database(self):
         """Inicializa o banco de dados SQLite (Apenas se track_changes=True)."""
         try:
-            conn = sqlite3.connect(self.database_path)
-            cursor = conn.cursor()
+            # conn = sqlite3.connect(self.database_path)
+            # cursor = conn.cursor()
             
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS downloads (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    orgao TEXT NOT NULL,
-                    dataset_slug TEXT NOT NULL,
-                    file_name TEXT NOT NULL,
-                    file_path TEXT NOT NULL,
-                    download_date TEXT NOT NULL,
-                    file_hash TEXT NOT NULL,
-                    file_size INTEGER NOT NULL,
-                    is_shapefile BOOLEAN NOT NULL,
-                    previous_hash TEXT,
-                    hash_changed BOOLEAN DEFAULT FALSE,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ''')
-            conn.commit()
-            conn.close()
+            # cursor.execute('''
+            #     CREATE TABLE IF NOT EXISTS downloads (
+            #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+            #         orgao TEXT NOT NULL,
+            #         dataset_slug TEXT NOT NULL,
+            #         file_name TEXT NOT NULL,
+            #         file_path TEXT NOT NULL,
+            #         download_date TEXT NOT NULL,
+            #         file_hash TEXT NOT NULL,
+            #         file_size INTEGER NOT NULL,
+            #         is_shapefile BOOLEAN NOT NULL,
+            #         previous_hash TEXT,
+            #         hash_changed BOOLEAN DEFAULT FALSE,
+            #         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            #     )
+            # ''')
+            # conn.commit()
+            # conn.close()
             self.logger.info(f"Banco de dados para {self.process_name} inicializado.")
         except Exception as e:
             self.logger.error(f"Erro ao inicializar banco de dados: {e}")
@@ -94,7 +94,7 @@ class Processor:
         for orgao, source in self.data_sources.items():
             orgao_results = []
             output_path = self.routes.get_output_path(source.name)
-            
+            print(output_path)
             self.logger.info(f"Processando órgão: {source.name}")
             
             for dataset in source.datasets:
@@ -111,58 +111,58 @@ class Processor:
                         continue
                     
                     # 2. Download
-                    result = self.downloader.download(url=url, file_name=dataset.file_name, file_path=output_path)
+                    # result = self.downloader.download(url=url, file_name=dataset.file_name, file_path=output_path)
                     
-                    if result['success']:
-                        file_path = Path(result['path'])
-                        is_shapefile = self._check_shapefile(file_path)
-                        file_size = file_path.stat().st_size
+                    # if result['success']:
+                    #     file_path = Path(result['path'])
+                    #     is_shapefile = self._check_shapefile(file_path)
+                    #     file_size = file_path.stat().st_size
                         
-                        file_hash = None
-                        hash_changed = None
-                        previous_hash = None
+                    #     file_hash = None
+                    #     hash_changed = None
+                    #     previous_hash = None
 
-                        if self.track_changes:
-                            file_hash = self._calculate_file_hash(file_path)
-                            previous_hash = self._get_previous_hash(orgao.value, dataset.slug)
-                            hash_changed = (previous_hash != file_hash) if previous_hash else True
+                    #     if self.track_changes:
+                    #         file_hash = self._calculate_file_hash(file_path)
+                    #         previous_hash = self._get_previous_hash(orgao.value, dataset.slug)
+                    #         hash_changed = (previous_hash != file_hash) if previous_hash else True
                             
-                            # Salvar no DB
-                            self._save_download_info({
-                                'orgao': orgao.value,
-                                'dataset_slug': dataset.slug,
-                                'file_name': dataset.file_name,
-                                'file_path': str(file_path),
-                                'file_hash': file_hash,
-                                'file_size': file_size,
-                                'is_shapefile': is_shapefile,
-                                'previous_hash': previous_hash,
-                                'hash_changed': hash_changed
-                            })
+                    #         # Salvar no DB
+                    #         self._save_download_info({
+                    #             'orgao': orgao.value,
+                    #             'dataset_slug': dataset.slug,
+                    #             'file_name': dataset.file_name,
+                    #             'file_path': str(file_path),
+                    #             'file_hash': file_hash,
+                    #             'file_size': file_size,
+                    #             'is_shapefile': is_shapefile,
+                    #             'previous_hash': previous_hash,
+                    #             'hash_changed': hash_changed
+                    #         })
 
-                        download_info = {
-                            'orgao': orgao.value,
-                            'dataset': dataset.slug,
-                            'url': url,
-                            'path': str(file_path),
-                            'is_shapefile': is_shapefile,
-                            'file_size': file_size,
-                            'hash': file_hash if self.track_changes else "N/A",
-                            'hash_changed': hash_changed if self.track_changes else False
-                        }
+                    #     download_info = {
+                    #         'orgao': orgao.value,
+                    #         'dataset': dataset.slug,
+                    #         'url': url,
+                    #         'path': str(file_path),
+                    #         'is_shapefile': is_shapefile,
+                    #         'file_size': file_size,
+                    #         'hash': file_hash if self.track_changes else "N/A",
+                    #         'hash_changed': hash_changed if self.track_changes else False
+                    #     }
                         
-                        dataset_result['downloads'].append(download_info)
-                        dataset_result['success'] = True
-                        self.current_execution_data.append(download_info)
+                    #     dataset_result['downloads'].append(download_info)
+                    #     dataset_result['success'] = True
+                    #     self.current_execution_data.append(download_info)
                         
-                        self.logger.info(f"✓ Sucesso: {dataset.slug}")
-                        if self.track_changes:
-                            self.logger.info(f"  - Alterado: {hash_changed}")
+                    #     self.logger.info(f"✓ Sucesso: {dataset.slug}")
+                    #     if self.track_changes:
+                    #         self.logger.info(f"  - Alterado: {hash_changed}")
                         
-                        break # Parar na primeira URL que funciona
+                    #     break # Parar na primeira URL que funciona
                     
-                    else:
-                        self.logger.error(f"Erro download: {result.get('error')}")
+                    # else:
+                    #     self.logger.error(f"Erro download: {result.get('error')}")
 
                 orgao_results.append(dataset_result)
             download_results[orgao.value] = orgao_results
@@ -272,7 +272,7 @@ class Processor:
         try:
             self.logger.info(f"🚀 Iniciando processo {self.process_name}...")
             
-            await self.validate_links()
+            # await self.validate_links()
             await self.download_data()
             
             report = self.generate_report()

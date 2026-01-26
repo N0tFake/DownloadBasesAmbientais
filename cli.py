@@ -1,7 +1,7 @@
 import questionary
 from questionary import Style
-from src.config.bases_infos import DATA_SOURCES_EMBARGOS
-from src.processors.Embargos import EmbargoProcessor
+from src.config.bases_infos import DATA_SOURCES_EMBARGOS, DATA_SOURCES_DETER
+from src.processors.Processor import Processor
 
 # --- Estilo customizado para o questionary ---
 custom_style = Style([
@@ -16,7 +16,7 @@ custom_style = Style([
     ('text', ''),                        # Texto normal
 ])
 
-def processar_base_especifica():
+async def processar_base_especifica():
     """Menu para selecionar uma base específica do dicionário DATA_SOURCES_EMBARGOS"""
     print("\n" + "="*60)
     print("📊 SELECIONAR BASE ESPECÍFICA".center(60))
@@ -33,14 +33,14 @@ def processar_base_especifica():
     bases_disponiveis.append(questionary.Choice(title="⬅️  Voltar", value="voltar"))
     
     # Seleção da base
-    base_selecionada = questionary.select(
+    base_selecionada = await questionary.select(
         "Escolha uma base específica:",
         choices=bases_disponiveis,
         style=custom_style
-    ).ask()
+    ).ask_async()
     
     if base_selecionada == "voltar":
-        return main_menu()
+        return await main_menu()
     
     # Obtém o nome da base
     nome_base = DATA_SOURCES_EMBARGOS[base_selecionada].name
@@ -52,13 +52,13 @@ def processar_base_especifica():
     # Chama o EmbargoProcessor
     # EmbargoProcessor()
 
-def main_menu():
+async def main_menu():
     """Menu principal do sistema"""
     print("\n" + "="*60)
     print("🌿 DOWNLOAD DE BASES AMBIENTAIS".center(60))
     print("="*60 + "\n")
     
-    opcao = questionary.select(
+    opcao = await questionary.select(
         "Selecione uma opção:",
         choices=[
             "Embargos",
@@ -68,16 +68,19 @@ def main_menu():
             "Sair"
         ],
         style=custom_style
-    ).ask()
+    ).ask_async()
     
     if opcao == "Sair":
         print("\nEncerrando o sistema...\n")
         exit(0)
+        
     elif opcao == "Embargos":
         print("\n" + "="*60)
         print("🚫 PROCESSANDO EMBARGOS".center(60))
         print("="*60 + "\n")
-        # EmbargoProcessor()
+        processor = Processor(process_name='Embargos', data_sources=DATA_SOURCES_EMBARGOS, track_changes=True)
+        return processor
+        
     elif opcao == "Deters":
         print("\n" + "="*60)
         print("⚠️  PROCESSANDO DETERS".center(60))
@@ -89,7 +92,8 @@ def main_menu():
         print("="*60 + "\n")
         # EmbargoProcessor()
     elif opcao == "Selecionar Base Específica":
-        processar_base_especifica()
+        return await processar_base_especifica()
 
 if __name__ == "__main__":
-    main_menu()
+    import asyncio
+    asyncio.run(main_menu())
