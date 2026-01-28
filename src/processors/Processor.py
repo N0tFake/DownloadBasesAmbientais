@@ -7,7 +7,6 @@ from src.config.logger_config import LoggerConfig
 from src.core.Validations import Validations
 from src.core.downloader import Downloader
 from src.utils.check_link import CheckLink
-from src.utils.templates import Templates
 
 
 class Processor:
@@ -18,11 +17,10 @@ class Processor:
         self.track_changes = track_changes
                 
         # Configurações
-        #! ADAPTAR routes
         self.routes = project_routes.Routes(process_name.capitalize())
         self.logger_config = LoggerConfig()
         self.logger = self.logger_config.get_logger()
-        # self.templates = Templates()
+    
         self.downloader = Downloader()
         self.validation = Validations()
         
