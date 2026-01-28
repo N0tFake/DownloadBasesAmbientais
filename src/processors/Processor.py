@@ -1,7 +1,9 @@
 from datetime import datetime
 from pathlib import Path
 import sqlite3
+import os
 from typing import Dict, List, Optional
+from dotenv import load_dotenv
 import project_routes
 from src.config.logger_config import LoggerConfig
 from src.core.Validations import Validations
@@ -29,7 +31,12 @@ class Processor:
         
         # Configurações específicas de histórico
         if self.track_changes:
-            self.database_path = self.routes.project_path() / f"{self.process_name}_database.db"
+            # Verifica se está em modo teste
+            load_dotenv()
+            modo_teste = os.getenv('TESTE', '').lower() == 'true'
+            suffix = '_teste' if modo_teste else ''
+            
+            self.database_path = self.routes.project_path() / f"{self.process_name}_database{suffix}.db"
             self._init_database()
         else:
             self.database_path = None

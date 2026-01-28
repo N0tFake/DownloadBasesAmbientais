@@ -1,9 +1,21 @@
 from datetime import datetime, timedelta
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Carrega variáveis do .env
+load_dotenv()
 
 PROJECT_PATH = Path(__file__).parent.absolute()
-DOWNLOADS_ROOT = Path(r'C:\Users\silvio.chaves\Desktop\MAIN\40_Data_Hub\Atualizações de Bases')
+
+# Define caminho base de downloads
+_BASE_PATH = Path(r'C:\Users\silvio.chaves\Desktop\MAIN\40_Data_Hub\Atualizações de Bases')
+
+# Se TESTE=true no .env, adiciona '/TESTE' ao caminho
+if os.getenv('TESTE', '').lower() == 'true':
+    DOWNLOADS_ROOT = _BASE_PATH / 'TESTE'
+else:
+    DOWNLOADS_ROOT = _BASE_PATH
 
 FOLDER_NAMES = {
   'Embargos': "Embargos",
