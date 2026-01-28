@@ -2,6 +2,7 @@ import logging
 import datetime
 from pathlib import Path
 from project_routes import Routes
+from rich.logging import RichHandler
 
 class MemoryHandler(logging.Handler):
     def __init__(self, log_storage):
@@ -26,10 +27,18 @@ class LoggerConfig():
     if not self.logger.hasHandlers():  
       self.log_formatter = logging.Formatter(self.str_formatter)
       
-      ch = logging.StreamHandler()
-      ch.setLevel(level)
-      ch.setFormatter(self.log_formatter)
-      self.logger.addHandler(ch)
+      # RichHandler para output rico no console
+      console_handler = RichHandler(
+          rich_tracebacks=True,
+          markup=True,
+          show_time=True,
+          show_level=True,
+          show_path=True, 
+          omit_repeated_times=False
+      )
+      console_handler.setLevel(level)
+      console_handler.setFormatter(self.log_formatter)
+      self.logger.addHandler(console_handler)
 
       memory_handler = MemoryHandler(self.log_messages)
       memory_handler.setLevel(level)

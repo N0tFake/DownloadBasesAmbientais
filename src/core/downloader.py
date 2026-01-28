@@ -5,6 +5,7 @@ from urllib.request import urlretrieve, urlopen
 from pathlib import Path
 from tqdm import tqdm
 import requests
+import urllib3
 
 
 #! WARNING
@@ -21,31 +22,11 @@ with urlopen(url, context=context) as response:
     print(f"Content-Type: {content_type}")
 """
 
-# TODO Obter os links de download dos arquivos
-file_name = "teste.zip"
-
-
-# def get_mine_type(file_name):
-#     mimetype = mimetypes.guess_extension(file_name)
-#     return mimetype4
-
-
-# with urlopen(url) as response:
-#     content_type = response.headers.get("Content-Type")
-#     print(f"Content-Type: {content_type}")
-
-# path, headers = urlretrieve(url, file_name)
-
-# print(f"Type file: {get_mine_type(file_name)}")
-
-# for name, value in headers.items():
-#   print(f"{name}: {value}")
-  
 class Downloader:
     def download(self, url, file_name, file_path):
         output = Path(file_path).joinpath(file_name)
         try:
-            response = requests.get(url, stream=True, verify=False)
+            response = requests.get(url, stream=True, verify=certifi.where())
             response.raise_for_status()
             
             total_size = int(response.headers.get('content-length', 0))

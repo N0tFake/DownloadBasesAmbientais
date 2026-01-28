@@ -1,167 +1,138 @@
-from enum import Enum
-from dataclasses import dataclass
+"""
+Configuração centralizada de fontes de dados ambientais.
 
-class Orgao(Enum):
-    IBAMA = "IBAMA"
-    ICMBIO = "ICMbio"
-    SEMA_MT = "SEMA_MT"
-    SIGA_MT = "SIGA_MT"
-    SIMGEO = "SIMGEO"
-    LDI = "LDI"
-    DETER_AMZ = 'DETER_AMZ'
-    DETER_CRRD = 'DETER_CRRD'
-    DETER_PANTANAL = 'DETER_PANTANAL'
+Este módulo agrega todas as fontes de dados e fornece utilitários para acesso.
 
-@dataclass(frozen=True)
-class DataSourceInfo:
-    name: str
-    datasets: list
+Estrutura:
+- enums.py: Enumerações (Orgao, OrgaoCategoria)
+- data_models.py: Dataclasses (DatasetsInfo, DataSourceInfo)
+- factories.py: Factory functions (create_dataset, create_source)
+- data_sources/: Definições por categoria
+  - alertas.py
+  - deter.py
+  - embargos.py
 
-@dataclass(frozen=True)
-class DatasetsInfo:
-    slug: str
-    urls: list
-    file_name: str
+Para adicionar uma nova fonte de dados:
+1. Adicione o órgão em enums.Orgao
+2. Adicione a definição no arquivo apropriado em data_sources/
+3. Use create_source() e create_dataset() para criar a estrutura
+"""
 
-DATA_SOURCES_DETER = {
-  Orgao.DETER_AMZ: DataSourceInfo(
-    name="DETER_AMZ",
-    datasets=[
-      DatasetsInfo(
-        slug="Deter Bioma Amazônia",
-        urls=[
-          "https://terrabrasilis.dpi.inpe.br/file-delivery/download/deter-amz/shape"
-        ],
-        file_name="SITE_Deter_AMZ.zip"
-      )
-    ]
-  ),
-  
-  Orgao.DETER_CRRD: DataSourceInfo(
-    name="DETER_CRRD",
-    datasets=[
-      DatasetsInfo(
-        slug="Deter Bioma Cerrado",
-        urls=[
-          "https://terrabrasilis.dpi.inpe.br/file-delivery/download/deter-cerrado-nb/shape"
-        ],
-        file_name="SITE_Deter_CRRD.zip"
-      )
-    ]
-  ),
-  
-  Orgao.DETER_PANTANAL: DataSourceInfo(
-    name="DETER_PANTANAL",
-    datasets=[
-      DatasetsInfo(
-        slug="Deter Bioma Pantanal",
-        urls=[
-          "https://terrabrasilis.dpi.inpe.br/file-delivery/download/deter-pantanal/shape"
-        ],
-        file_name="SITE_Deter_Pantanal.zip"
-      )
-    ]
-  )
-}  
+from typing import Dict, List, Optional
+from .enums import Orgao, OrgaoCategoria
+from .data_models import DataSourceInfo
+from .data_sources import (
+    DATA_SOURCES_ALERTAS,
+    DATA_SOURCES_DETER,
+    DATA_SOURCES_EMBARGOS
+)
 
-DATA_SOURCES_EMBARGOS = {
-  Orgao.IBAMA: DataSourceInfo(
-    name="IBAMA",
-    datasets=[
-      DatasetsInfo(
-        slug="Embargos IBAMA",
-        urls=[
-          "https://pamgia.ibama.gov.br/geoservicos/arquivos/adm_embargo_ibama_a.shp.zip"
-        ],
-        file_name="SITE_embargos_ibama.zip"
-      )
-    ]
-  ),
-  
-  Orgao.ICMBIO: DataSourceInfo(
-    name="ICMbio",
-    datasets=[
-      DatasetsInfo(
-        slug="Embargos ICMbio",
-        urls=[
-          "https://www.gov.br/icmbio/pt-br/assuntos/dados_geoespaciais/mapa-tematico-e-dados-geoestatisticos-das-unidades-de-conservacao-federais/embargos_icmbio_shp.zip",
-          "https://www.gov.br/icmbio/pt-br/assuntos/dados_geoespaciais/mapa-tematico-e-dados-geoestatisticos-das-unidades-de-conservacao-federais/embargos_icmbio.zip"
-        ],
-        file_name="SITE_embargos_icmbio.zip"
-      )
-    ]
-  ),
-  
-  Orgao.SEMA_MT: DataSourceInfo(
-    name="SEMA_MT",
-    datasets=[
-      DatasetsInfo(
-        slug="Embargos SEMA MT",
-        urls=[
-          "https://geo.sema.mt.gov.br/geoserver/wfs?authkey=541085de-9a2e-454e-bdba-eb3d57a2f492&request=getfeature&service=wfs&version=1.0.0&typename=Geoportal:AREAS_EMBARGADAS_SEMA&outputformat=SHAPE-ZIP"
-        ],
-        file_name="SITE_embargos_sema_mt.zip"
-      )
-    ]
-  ),
-  
-  Orgao.SIGA_MT: DataSourceInfo(
-    name = "SIGA_MT",
-    datasets = [
-      DatasetsInfo(
-        slug="Embargos SIGA MT Polígono",
-        urls=[
-          "https://geo.sema.mt.gov.br/geoserver/wfs?authkey=541085de-9a2e-454e-bdba-eb3d57a2f492&request=getfeature&service=wfs&version=1.0.0&typename=Geoportal:AREA_EMBARGADA_SIGA_POLIGONO&outputformat=SHAPE-ZIP"
-        ],
-        file_name="SITE_embargos_siga_poligono_mt.zip"
-      ),
-      DatasetsInfo(
-        slug="Embargos SIGA MT Ponto",
-        urls=[
-          "https://geo.sema.mt.gov.br/geoserver/wfs?authkey=541085de-9a2e-454e-bdba-eb3d57a2f492&request=getfeature&service=wfs&version=1.0.0&typename=Geoportal:AREA_EMBARGADA_SIGA_PONTO&outputformat=SHAPE-ZIP"
-        ],
-        file_name="SITE_embargos_siga_ponto_mt.zip"
-      )
-    ],
-  ),
 
-  Orgao.SIMGEO: DataSourceInfo(
-    name = "SIMGEO",
-    datasets = [
-      DatasetsInfo(
-        slug="Embargos SIMGEO",
-        urls=[
-          "http://www.sema.mt.gov.br/transparencia/index.php/documentos/25/Dados-de-Desmatamento/2813/Base-de-Desmatamento-de-2018.zip"
-        ],
-        file_name="SITE_embargos_simgeo_mt.zip"
-      )
-    ],
-  ),
-  
-  Orgao.LDI:  DataSourceInfo(
-    name = "LDI",
-    datasets = [  
-      DatasetsInfo(
-        slug="Embargos LDI manual",
-        urls=[
-          "https://monitoramento.semas.pa.gov.br/ldi/regioesdesmatamento/baixartodosshapefile?tipoShape=MANUAL"
-        ],
-        file_name="SITE_embargos_LDI_manual.zip"
-      ),
-      DatasetsInfo(
-        slug="Embargos LDI automatizado",
-        urls=[
-          "https://monitoramento.semas.pa.gov.br/ldi/regioesdesmatamento/baixartodosshapefile?tipoShape=AUTOMATIZADO"
-        ],
-        file_name="SITE_embargos_LDI_automatico.zip"
-      ),
-      DatasetsInfo(
-        slug="Embargos LDI sem sobreposição",
-        urls=[
-          "https://monitoramento.semas.pa.gov.br/ldi/regioesdesmatamento/baixartodosshapefile?tipoShape=SEMSOBREPOSICAO"
-        ],
-        file_name="SITE_embargos_LDI_sem_sobreposicao.zip"
-      )
-    ] 
-  ),
+# ============================================================================
+# AGREGADORES E REGISTROS
+# ============================================================================
+
+# Lista de todos os grupos
+LIST_DATA_SOURCES = [
+    DATA_SOURCES_ALERTAS,
+    DATA_SOURCES_DETER,
+    DATA_SOURCES_EMBARGOS
+]
+
+# Dicionário completo unificado
+ALL_DATA_SOURCES: Dict[Orgao, DataSourceInfo] = {
+    **DATA_SOURCES_ALERTAS,
+    **DATA_SOURCES_DETER,
+    **DATA_SOURCES_EMBARGOS
 }
+
+
+# ============================================================================
+# FUNÇÕES UTILITÁRIAS
+# ============================================================================
+
+def get_source_by_orgao(orgao: Orgao) -> Optional[DataSourceInfo]:
+    """
+    Obtém informações de uma fonte de dados por órgão.
+    
+    Args:
+        orgao: Enum do órgão desejado
+        
+    Returns:
+        DataSourceInfo ou None se não encontrado
+    """
+    return ALL_DATA_SOURCES.get(orgao)
+
+
+def get_sources_by_categoria(categoria: OrgaoCategoria) -> Dict[Orgao, DataSourceInfo]:
+    """
+    Obtém todas as fontes de uma categoria específica.
+    
+    Args:
+        categoria: Categoria desejada (EMBARGOS, DESMATAMENTO, ALERTAS)
+        
+    Returns:
+        Dicionário {Orgao: DataSourceInfo} filtrado
+    """
+    return {
+        orgao: source 
+        for orgao, source in ALL_DATA_SOURCES.items() 
+        if source.categoria == categoria
+    }
+
+
+def list_all_orgaos() -> List[str]:
+    """
+    Lista todos os órgãos disponíveis.
+    
+    Returns:
+        Lista com nomes dos órgãos
+    """
+    return [orgao.value for orgao in Orgao]
+
+
+def get_dataset_count() -> Dict[str, int]:
+    """
+    Retorna estatísticas sobre os datasets.
+    
+    Returns:
+        Dict com contagens totais e por categoria
+    """
+    stats = {
+        "total_sources": len(ALL_DATA_SOURCES),
+        "total_datasets": sum(len(source.datasets) for source in ALL_DATA_SOURCES.values()),
+        "by_category": {}
+    }
+    
+    for categoria in OrgaoCategoria:
+        sources = get_sources_by_categoria(categoria)
+        stats["by_category"][categoria.value] = {
+            "sources": len(sources),
+            "datasets": sum(len(s.datasets) for s in sources.values())
+        }
+    
+    return stats
+
+
+# ============================================================================
+# EXPORTS PARA COMPATIBILIDADE
+# ============================================================================
+
+# Mantém compatibilidade com código antigo
+DATA_SOURCE_ALERTAS = DATA_SOURCES_ALERTAS
+
+__all__ = [
+    # Dicionários de dados
+    'DATA_SOURCES_ALERTAS',
+    'DATA_SOURCES_DETER',
+    'DATA_SOURCES_EMBARGOS',
+    'DATA_SOURCE_ALERTAS',  # Compatibilidade
+    'ALL_DATA_SOURCES',
+    'LIST_DATA_SOURCES',
+    
+    # Funções utilitárias
+    'get_source_by_orgao',
+    'get_sources_by_categoria',
+    'list_all_orgaos',
+    'get_dataset_count'
+]

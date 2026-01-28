@@ -7,13 +7,14 @@ DOWNLOADS_ROOT = Path(r'C:\Users\silvio.chaves\Desktop\MAIN\40_Data_Hub\Atualiza
 
 FOLDER_NAMES = {
   'Embargos': "Embargos",
-  'Deter': "Desmatamento",
+  'Deters': "Desmatamento",
   'Alertas': "Desmatamento"
 }
 
 class Routes:
-  def __init__(self, type_base):
-    self.main_folder_name = FOLDER_NAMES[type_base]
+  def __init__(self, type_base=None):
+    if type_base is not None:
+      self.main_folder_name = FOLDER_NAMES[type_base]
   
   def project_path(self):
     return PROJECT_PATH
