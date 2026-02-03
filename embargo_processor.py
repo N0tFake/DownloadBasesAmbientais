@@ -36,7 +36,7 @@ class EmbargoProcessor:
         self.templates = Templates()
         self.downloader = Downloader()
         self.validation = Validations()
-        self.database_path = self.routes.project_path() / "embargo_database.db"
+        self.database_path = self.routes.project_path() / "embargos_database.db"
         
         # Inicializar banco de dados
         self._init_database()
