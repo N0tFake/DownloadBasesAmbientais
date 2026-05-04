@@ -22,9 +22,12 @@ class Orgao(Enum):
     # Alertas
     ALERTAS = "Alertas"
 
+    #TI
+    TERRAS_INDIGENAS = "Terras Indigenas"
 
 class OrgaoCategoria(Enum):
     """Categorias de dados ambientais."""
     EMBARGOS = "Embargos"
     DESMATAMENTO = "Deter"
     ALERTAS = "Alertas"
+    TERRAS_INDIGENAS = "Terras Indígenas"

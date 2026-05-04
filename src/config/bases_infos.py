@@ -24,7 +24,8 @@ from .data_models import DataSourceInfo
 from .data_sources import (
     DATA_SOURCES_ALERTAS,
     DATA_SOURCES_DETER,
-    DATA_SOURCES_EMBARGOS
+    DATA_SOURCES_EMBARGOS,
+    DATA_SOURCES_TERRAS_INDIGENAS
 )
 
 
@@ -36,14 +37,16 @@ from .data_sources import (
 LIST_DATA_SOURCES = [
     DATA_SOURCES_ALERTAS,
     DATA_SOURCES_DETER,
-    DATA_SOURCES_EMBARGOS
+    DATA_SOURCES_EMBARGOS,
+    DATA_SOURCES_TERRAS_INDIGENAS
 ]
 
 # Dicionário completo unificado
 ALL_DATA_SOURCES: Dict[Orgao, DataSourceInfo] = {
     **DATA_SOURCES_ALERTAS,
     **DATA_SOURCES_DETER,
-    **DATA_SOURCES_EMBARGOS
+    **DATA_SOURCES_EMBARGOS,
+    **DATA_SOURCES_TERRAS_INDIGENAS
 }
 
 
@@ -51,7 +54,7 @@ ALL_DATA_SOURCES: Dict[Orgao, DataSourceInfo] = {
 # FUNÇÕES UTILITÁRIAS
 # ============================================================================
 
-def get_source_by_orgao(orgao: Orgao) -> Optional[DataSourceInfo]:
+def get_source_by_orgao(orgao: Orgao):
     """
     Obtém informações de uma fonte de dados por órgão.
     
@@ -64,7 +67,7 @@ def get_source_by_orgao(orgao: Orgao) -> Optional[DataSourceInfo]:
     return ALL_DATA_SOURCES.get(orgao)
 
 
-def get_sources_by_categoria(categoria: OrgaoCategoria) -> Dict[Orgao, DataSourceInfo]:
+def get_sources_by_categoria(categoria: OrgaoCategoria):
     """
     Obtém todas as fontes de uma categoria específica.
     
@@ -81,7 +84,7 @@ def get_sources_by_categoria(categoria: OrgaoCategoria) -> Dict[Orgao, DataSourc
     }
 
 
-def list_all_orgaos() -> List[str]:
+def list_all_orgaos():
     """
     Lista todos os órgãos disponíveis.
     
@@ -91,7 +94,7 @@ def list_all_orgaos() -> List[str]:
     return [orgao.value for orgao in Orgao]
 
 
-def get_dataset_count() -> Dict[str, int]:
+def get_dataset_count():
     """
     Retorna estatísticas sobre os datasets.
     
@@ -127,6 +130,7 @@ __all__ = [
     'DATA_SOURCES_DETER',
     'DATA_SOURCES_EMBARGOS',
     'DATA_SOURCE_ALERTAS',  # Compatibilidade
+    'DATA_SOURCES_TERRAS_INDIGENAS',
     'ALL_DATA_SOURCES',
     'LIST_DATA_SOURCES',
     

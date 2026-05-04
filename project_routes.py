@@ -20,7 +20,8 @@ else:
 FOLDER_NAMES = {
   'Embargos': "Embargos",
   'Deters': "Desmatamento",
-  'Alertas': "Desmatamento"
+  'Alertas': "Desmatamento",
+  'Terras indigenas': "Areas Protegidas"
 }
 
 class Routes:

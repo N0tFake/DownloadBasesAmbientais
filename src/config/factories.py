@@ -37,7 +37,7 @@ def create_source(
     datasets: List[DatasetsInfo], 
     categoria: OrgaoCategoria = None, 
     **metadata
-) -> Dict[Orgao, DataSourceInfo]:
+):
     """
     Factory para criar uma fonte de dados completa.
     

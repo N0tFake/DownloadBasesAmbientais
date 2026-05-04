@@ -3,7 +3,8 @@ from questionary import Style
 from src.config.bases_infos import (
     DATA_SOURCES_EMBARGOS, 
     DATA_SOURCES_DETER, 
-    DATA_SOURCES_ALERTAS
+    DATA_SOURCES_ALERTAS,
+    DATA_SOURCES_TERRAS_INDIGENAS
 )
 from src.processors.Processor import Processor
 
@@ -30,10 +31,11 @@ async def processar_base_especifica():
     categoria = await questionary.select(
         "Escolha a categoria:",
         choices=[
-            questionary.Choice(title="🚫 Embargos", value="embargos"),
-            questionary.Choice(title="⚠️  Desmatamento (Deter)", value="deter"),
-            questionary.Choice(title="🔔 Alertas", value="alertas"),
-            questionary.Choice(title="⬅️  Voltar", value="voltar")
+            questionary.Choice(title="Embargos", value="embargos"),
+            questionary.Choice(title="Terras Indígenas", value="terras-indigenas"),
+            questionary.Choice(title="Desmatamento (Deter)", value="deter"),
+            questionary.Choice(title="Alertas", value="alertas"),
+            questionary.Choice(title="⬅️ Voltar", value="voltar")
         ],
         style=custom_style
     ).ask_async()
@@ -45,6 +47,9 @@ async def processar_base_especifica():
     if categoria == "embargos":
         data_source = DATA_SOURCES_EMBARGOS
         process_name = "Embargos"
+    elif categoria == 'terras-indigenas':
+        data_source == DATA_SOURCES_TERRAS_INDIGENAS
+        process_name == 'Terras Indigenas'
     elif categoria == "deter":
         data_source = DATA_SOURCES_DETER
         process_name = "Deter"
@@ -104,10 +109,11 @@ async def main_menu():
     print("🌿 DOWNLOAD DE BASES AMBIENTAIS".center(60))
     print("="*60 + "\n")
     
-    opcao = await questionary.select(
+    opc = await questionary.select(
         "Selecione uma opção:",
         choices=[
             "Embargos",
+            "Terras Indígenas",
             "Deters",
             "Alertas",
             "Selecionar Base Específica",
@@ -116,32 +122,39 @@ async def main_menu():
         style=custom_style
     ).ask_async()
     
-    if opcao == "Sair":
+    if opc == "Sair":
         print("\nEncerrando o sistema...\n")
         exit(0)
         
-    elif opcao == "Embargos":
+    elif opc == "Embargos":
         print("\n" + "="*60)
         print("🚫 PROCESSANDO EMBARGOS".center(60))
         print("="*60 + "\n")
         processor = Processor(process_name='Embargos', data_sources=DATA_SOURCES_EMBARGOS, track_changes=True)
         return processor
         
-    elif opcao == "Deters":
+    elif opc == "Deters":
         print("\n" + "="*60)
         print("⚠️  PROCESSANDO DETERS".center(60))
         print("="*60 + "\n")
         processor = Processor(process_name='Deters', data_sources=DATA_SOURCES_DETER, track_changes=False)
         return processor
         
-    elif opcao == "Alertas":
+    elif opc == "Alertas":
         print("\n" + "="*60)
         print("🔔 PROCESSANDO ALERTAS".center(60))
         print("="*60 + "\n")
         processor = Processor(process_name='Alertas', data_sources=DATA_SOURCES_ALERTAS, track_changes=False)
         return processor
     
-    elif opcao == "Selecionar Base Específica":
+    elif opc == "Terras Indígenas":
+        print("\n" + "="*60)
+        print("🌲 PROCESSANDO TERRAS INDÍGENAS".center(60))
+        print("="*60 + "\n")
+        processor = Processor(process_name='Terras Indigenas', data_sources=DATA_SOURCES_TERRAS_INDIGENAS, track_changes=True)
+        return processor
+    
+    elif opc == "Selecionar Base Específica":
         return await processar_base_especifica()
 
 if __name__ == "__main__":

@@ -202,13 +202,13 @@ class Processor:
         print("="*80)
         
         s = report['summary']
-        print(f"📊 RESUMO:")
+        print(f"RESUMO:")
         print(f"   • Total Downloads: {s['total_downloads']}")
         print(f"   • Shapefiles Válidos: {s['valid_shapefiles']}")
         if self.track_changes:
             print(f"   • Arquivos Alterados: {s['changed_files']}")
             
-        print(f"\n📋 DETALHES:")
+        print(f"\nDETALHES:")
         for d in report['downloads']:
             status_shape = "✓" if d['is_shapefile'] else "✗"
             size_mb = d['file_size'] / (1024 * 1024)
@@ -223,7 +223,7 @@ class Processor:
         print("="*80)
 
     # --- Métodos Auxiliares ---
-    def _check_shapefile(self, file_path: Path) -> bool:
+    def _check_shapefile(self, file_path: Path):
         try:
             return self.validation.is_shapefile(str(file_path))
         except Exception:
@@ -235,7 +235,7 @@ class Processor:
         except Exception:
             return ""
 
-    def _get_previous_hash(self, orgao: str, dataset_slug: str) -> Optional[str]:
+    def _get_previous_hash(self, orgao: str, dataset_slug: str):
         if not self.database_path: return None
         try:
             conn = sqlite3.connect(self.database_path)

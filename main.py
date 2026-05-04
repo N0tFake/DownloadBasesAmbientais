@@ -37,7 +37,7 @@ async def main():
         report = results.get('report', {})
         if report:
             summary = report.get('summary', {})
-            print(f"\n📊 RESUMO FINAL:")
+            print(f"\nRESUMO FINAL:")
             print(f"   • Downloads realizados: {summary.get('total_downloads', 0)}")
             print(f"   • Shapefiles válidos: {summary.get('valid_shapefiles', 0)}")
             print(f"   • Arquivos alterados: {summary.get('changed_files', 0)}")

@@ -2,7 +2,7 @@
 
 ## 📖 Descrição
 
-Sistema modular e extensível para automatizar o download, validação e processamento de bases de dados ambientais de diferentes órgãos brasileiros. Suporta múltiplas categorias: **Embargos**, **Desmatamento (DETER)** e **Alertas**.
+Sistema modular e extensível para automatizar o download, validação e processamento de bases de dados ambientais de diferentes órgãos brasileiros. Suporta múltiplas categorias: **Embargos**, **Desmatamento (DETER)**, **Alertas** e **Terras Indígenas**.
 
 ## ✨ Funcionalidades
 
@@ -40,6 +40,9 @@ Sistema modular e extensível para automatizar o download, validação e process
 ### 🔔 Alertas
 - **Sistema de Alertas** - Dashboard de alertas de desmatamento
 
+### 🏕️ Terras Indígenas
+- **FUNAI** - Fundação Nacional dos Povos Indígenas (Limites poligonais)
+
 ## 🚀 Como Usar
 
 ### Instalação
@@ -63,6 +66,7 @@ python main.py
 - **Embargos** - Processa todas as fontes de embargos
 - **Deters** - Processa dados de desmatamento DETER
 - **Alertas** - Processa sistema de alertas
+- **Terras Indigenas** - Processa bases de áreas protegidas e terras indígenas
 - **Selecionar Base Específica** - Escolhe categoria e órgão individual
 - **Sair** - Encerra o sistema
 
@@ -220,6 +224,21 @@ DATA_SOURCES_EMBARGOS: Dict[Orgao, DataSourceInfo] = {
 }
 ```
 
+#### 4. Adicionar no CLI
+Para que a nova categoria seja exibida no menu interativo principal, atualize as opções no seu gerenciador de menu (`main.py` ou `cli.py`):
+```python
+# Exemplo de adição no menu do questionary
+opcoes = [
+    "Embargos",
+    "Deters",
+    "Alertas",
+    "Terras Indigenas", 
+    "NOVA_CATEGORIA",  # ← Adicione a nova categoria aqui
+    "Selecionar Base Específica",
+    "Sair"
+]
+```
+
 ### Exemplo ComAvançados
 
 ### Executar Exemplos Integrados
@@ -241,16 +260,6 @@ orgaos_federais = {
 
 processor = Processor('Embargos', orgaos_federais, track_changes=True)
 await processor.run()
-```
-
-### Processar por Estado
-```python
-# Filtrar apenas Mato Grosso
-orgaos_mt = {
-    orgao: info
-    for orgao, info in ALL_DATA_SOURCES.items()
-    if info.metadata.get('estado') == 'MT'
-}
 ```
 
 ### Validar Configurações

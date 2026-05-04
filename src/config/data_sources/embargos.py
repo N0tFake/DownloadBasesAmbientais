@@ -13,7 +13,10 @@ _IBAMA_SOURCE = create_source(
     datasets=[
         create_dataset(
             slug="Embargos IBAMA",
-            urls=["https://pamgia.ibama.gov.br/geoservicos/arquivos/adm_embargo_ibama_a.shp.zip"],
+            urls=[
+                # "https://pamgia.ibama.gov.br/geoservicos/arquivos/adm_embargo_ibama_a.shp.zip"
+                "https://ftp-pamgia.ibama.gov.br/dados/adm_embargos_ibama_a.zip"
+            ],
             file_name="SITE_embargos_ibama.zip",
             description="Áreas embargadas pelo IBAMA"
         )
