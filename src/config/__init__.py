@@ -1,5 +1,5 @@
-# from bases_infos import EMBARGOS_DATA_SOURCES
+# from bases_infos import DATA_SOURCES_EMBARGOS
 
 # __all__ = [
-#   "EMBARGOS_DATA_SOURCES"  
+#   "DATA_SOURCES_EMBARGOS"  
 # ]
