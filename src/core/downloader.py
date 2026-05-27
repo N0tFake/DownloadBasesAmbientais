@@ -69,8 +69,22 @@ with urlopen(url, context=context) as response:
 class Downloader:
     def download(self, url, file_name, file_path):
         output = Path(file_path).joinpath(file_name)
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': '*/*',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+        }
+        
         try:
-            response = requests.get(url, stream=True, verify=certifi.where())
+            response = requests.get(
+                url, 
+                stream=True, 
+                verify=certifi.where(),
+                headers=headers,     
+                allow_redirects=True
+            )
             response.raise_for_status()
             
             total_size = int(response.headers.get('content-length', 0))
@@ -97,7 +111,7 @@ class Downloader:
                 'path': str(output),
                 'header': dict(response.headers)
             }
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             return {
                 'success': False,
                 'error': str(e)

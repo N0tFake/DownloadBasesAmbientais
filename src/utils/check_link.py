@@ -56,10 +56,10 @@ class CheckLink:
             self.status_message = "Erro de Resposta"
         
         except Exception as e:
-          self.is_valid = False
-          self.error_message = str(e)
-          self.error_type = type(e)
-          self.status_message = "Erro Desconhecido"
+            self.is_valid = False
+            self.error_message = str(e)
+            self.error_type = type(e)
+            self.status_message = "Erro Desconhecido"
 
     async def __try_get_request(self, session):
         try:
@@ -74,14 +74,14 @@ class CheckLink:
                 
                 if self.is_valid:
                     self.is_compacted_file = await self.__check_content_type(response)
-               
+            
         except Exception as e:
             print(f'\033[31mErro na requisição GET: {str(e)}\033[0m')
     
     async def __check_content_type(self, response):
-      checkCompactedFile = CheckCompactedFileResponse(response)
-      return await checkCompactedFile.is_valid()
-     
+        checkCompactedFile = CheckCompactedFileResponse(response)
+        return await checkCompactedFile.is_valid()
+    
     def __get_status_message(self, status_code):
         status_messages = {
             200: "OK",
